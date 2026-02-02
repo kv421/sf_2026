@@ -79,22 +79,23 @@ def setup_sensors():
             gas = DFRobot_MultiGasSensor_UART(9600)
             
             print("Initializing NH3 sensor (waiting for mode change)...")
-            # Retry logic for mode change
+            # Retry logic for mode change - wait up to 60s
             attempts = 0
             mode_changed = False
-            while attempts < 5:
+            while attempts < 60:
                 if gas.change_acquire_mode(gas.NH3):
                     mode_changed = True
                     break
+                print("NH3: Wait acquire mode change...")
                 time.sleep(1)
                 attempts += 1
             
             if mode_changed:
                 gas.set_temp_compensation(gas.ON)
                 sensors['nh3'] = gas
-                print("NH3 Init Success")
+                print("NH3 Init Success!")
             else:
-                print("NH3 Init Failed (Mode change timeout)")
+                print("Warning: NH3 Init Failed (Mode change timeout after 60s)")
                 sensors['nh3'] = None
         else:
             sensors['nh3'] = None
@@ -165,7 +166,28 @@ def main():
             
             # Prepare row
             row = [timestamp, b_temp, b_hum, b_pres, b_gas, d_temp, d_hum, s_voc, n_conc]
-            print(f"Read: {row}")
+            
+            # Formatted Console Output
+            print("-" * 60)
+            print(f"Time: {timestamp}")
+            
+            # BME Output
+            if b_temp is not None:
+                gas_str = f"{b_gas:.2f} Ohms" if b_gas else "(Heating...)"
+                print(f"BME688: {b_temp:.2f}C | {b_hum:.2f}%RH | {b_pres:.2f}hPa | Gas: {gas_str}")
+            else:
+                print("BME688: Read Failed")
+                
+            # Other Sensors
+            dht_str = f"{d_temp:.2f}C / {d_hum:.2f}%" if d_temp else "Failed"
+            sgp_str = f"{s_voc}" if s_voc else "Failed"
+            nh3_str = f"{n_conc} ppm" if n_conc else "Failed"
+            
+            print(f"DHT22 : {dht_str}")
+            print(f"SGP40 : {sgp_str} (VOC Index)")
+            print(f"NH3   : {nh3_str}")
+            print("-" * 60)
+
             
             # File Management
             today = datetime.now().strftime("%Y-%m-%d")
