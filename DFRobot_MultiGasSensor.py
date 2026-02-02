@@ -11,11 +11,20 @@
 """
 import serial
 import time
-import smbus
-import spidev
+try:
+  import smbus
+except ImportError:
+  smbus = None
+try:
+  import spidev
+except ImportError:
+  spidev = None
 import os
 import math
-import RPi.GPIO as GPIO
+try:
+  import RPi.GPIO as GPIO
+except ImportError:
+  GPIO = None
 import logging
 
 logger = logging.getLogger()
