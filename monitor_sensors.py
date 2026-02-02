@@ -9,15 +9,11 @@ import adafruit_sgp40
 import bme680
 import boto3
 
-# Add path for DFRobot sensor (replicating existing script logic)
-# This looks for libraries 3 directories up from this script
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__)))))
+import DFRobot_MultiGasSensor
+from DFRobot_MultiGasSensor import *
 
-try:
-    from DFRobot_MultiGasSensor import *
-except ImportError:
-    print("Warning: Could not import DFRobot_MultiGasSensor. NH3 data will be missing.")
-    DFRobot_MultiGasSensor_UART = None
+DFRobot_MultiGasSensor_UART = DFRobot_MultiGasSensor.DFRobot_MultiGasSensor_UART
+
 
 # Config
 BUCKET_NAME = "sf20261"
