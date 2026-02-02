@@ -698,6 +698,6 @@ class DFRobot_MultiGasSensor_UART(DFRobot_MultiGasSensor):
       if count != 0:
         recvbuf = self.ser.read(count)
         self.ser.flushInput()
-        recvbuf =[ord(c) for c in recvbuf]
+        recvbuf = list(recvbuf)
         return count
   
