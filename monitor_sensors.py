@@ -9,10 +9,8 @@ import adafruit_sgp40
 import bme680
 import boto3
 
-import DFRobot_MultiGasSensor
 from DFRobot_MultiGasSensor import *
 
-DFRobot_MultiGasSensor_UART = DFRobot_MultiGasSensor.DFRobot_MultiGasSensor_UART
 
 
 
